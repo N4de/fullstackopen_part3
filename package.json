@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/N4de/fullstackopen_part3/issues"
   },
-  "homepage": "https://github.com/N4de/fullstackopen_part3#readme"
+  "homepage": "https://github.com/N4de/fullstackopen_part3#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
 }
