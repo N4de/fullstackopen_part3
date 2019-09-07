@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json());
 
 let persons = [
     {
@@ -23,6 +26,12 @@ let persons = [
       id: 4
     }
 ];
+
+const generateId = () => {
+  const newId = Math.floor(Math.random() * 1337);
+
+  return newId;
+}
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
@@ -60,6 +69,42 @@ app.delete('/api/persons/:id', (req, res) => {
   persons = persons.filter(note => note.id !== id)
 
   res.status(204).end()
+})
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  const duplicateName = persons.find(person => person.name === body.name);
+
+  console.log(body);
+
+  if (!body.name) {
+    return res.status(400).json({ 
+      error: 'name missing' 
+    })
+  }
+
+  if (!body.number) {
+    return res.status(400).json({ 
+      error: 'number missing' 
+    })
+  }
+
+  if (duplicateName) {
+    return res.status(400).json({ 
+      error: 'name must be unique' 
+    })
+  }  
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  }
+
+  persons = persons.concat(person)
+
+  res.json(person)
 })
 
 const PORT = 3001
