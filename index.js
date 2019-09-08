@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
+const morgan = require('morgan');
 
 app.use(bodyParser.json());
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'));
+morgan.token('person', function (req, res) { return JSON.stringify(req.body) })
 
 let persons = [
     {
@@ -73,7 +76,6 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
-
   const duplicateName = persons.find(person => person.name === body.name);
 
   console.log(body);
