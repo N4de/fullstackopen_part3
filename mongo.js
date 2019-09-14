@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+import Contact from './models/contact';
 
 if ( process.argv.length<3 ) {
   console.log('give password as argument')
@@ -16,8 +17,6 @@ const contactSchema = new mongoose.Schema({
   name: String,
   number: String,
 })
-
-const Contact = mongoose.model('Contact', contactSchema)
 
 if(process.argv.length === 3) {
     console.log('phonebook: ');
