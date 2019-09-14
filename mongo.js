@@ -10,20 +10,26 @@ const password = process.argv[2]
 const url =
 `mongodb+srv://jarannal:${password}@cluster0-amjar.mongodb.net/phonebook-app?retryWrites=true`;  
 
-mongoose.connect(url, { useNewUrlParser: true })
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+
+const contactSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
+
+const Contact = mongoose.model('Contact', contactSchema)
 
 if(process.argv.length === 3) {
-    //TODO GET ALL CONTACTS
+    console.log('phonebook: ');
+    Contact.find({}).then(response => {
+      response.forEach(contact => console.log(`${contact.name} ${contact.number}`));
+      mongoose.connection.close();
+    });
 }
 else {
     const name = process.argv[3];
     const number = process.argv[4];
-    const contactSchema = new mongoose.Schema({
-      name: String,
-      number: String,
-    })
     
-    const Contact = mongoose.model('Contact', contactSchema)
     
     const contact = new Contact({
         name: name,
