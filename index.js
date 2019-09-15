@@ -44,6 +44,9 @@ app.get('/api/persons/:id', (req, res) => {
   Contact.findById(id).then(contact => {
     res.json(contact.toJSON())
   })
+    .catch(error => {
+      res.send('There is no contact with that id.');
+    });
 
   
 });
@@ -57,9 +60,6 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
-  const duplicateName = persons.find(person => person.name === body.name);
-
-  console.log(body);
 
   if (!body.name) {
     return res.status(400).json({ 
@@ -72,22 +72,16 @@ app.post('/api/persons', (req, res) => {
       error: 'number missing' 
     })
   }
-
-  if (duplicateName) {
-    return res.status(400).json({ 
-      error: 'name must be unique' 
-    })
-  }  
-
-  const person = {
+ 
+  const contact = new Contact ({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  }
+  });
 
-  persons = persons.concat(person)
-
-  res.json(person)
+  contact.save()
+    .then(savedContact => {
+      res.json(savedContact.toJSON());
+    })
 })
 
 const PORT = process.env.PORT || 3001
