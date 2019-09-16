@@ -13,12 +13,6 @@ app.use(bodyParser.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'));
 morgan.token('person', function (req, res) { return JSON.stringify(req.body) })
 
-const generateId = () => {
-  const newId = Math.floor(Math.random() * 133337);
-
-  return newId;
-}
-
 
 app.get('/api/persons', (req, res) => {
 
@@ -45,7 +39,8 @@ app.get('/api/persons/:id', (req, res) => {
     res.json(contact.toJSON())
   })
     .catch(error => {
-      res.send('There is no contact with that id.');
+      console.log(error);
+      res.status(404).end()
     });
 
   
@@ -53,9 +48,15 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
-  persons = persons.filter(person => person.id !== id)
+  Contact.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(404).end()
+    });
 
-  res.status(204).end()
 })
 
 app.post('/api/persons', (req, res) => {
