@@ -24,12 +24,16 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/info', (req, res) => {
 
-  const date = new Date();
-  const infos = `Phonebook has info for ${persons.length} people`
-  
-  res.send(
-    `${infos} </br> </br> ${date}`
-  );
+  Contact.find({})
+  .then(contacts => {
+    const date = new Date();
+    const infos = `Phonebook has info for ${contacts.length} people`
+    
+    res.send(
+      `${infos} </br> </br> ${date}`
+    );
+  });
+
 });
 
 app.get('/api/persons/:id', (req, res, next) => {
