@@ -17,9 +17,14 @@ const contactSchema = new mongoose.Schema({
     name: {
       unique: true,
       type: String,
-      required: true
+      required: true,
+      minlength: 3,
     },
-    number: String,
+    number: {
+      type: String,
+      required: true,
+      minlength: 8
+    }
 })
 contactSchema.plugin(uniqueValidator);
 
